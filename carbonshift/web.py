@@ -216,6 +216,7 @@ PAGE = """
            border:1px solid rgba(251,191,36,.3); border-radius:5px; padding:0 5px; margin-left:3px; }
     .rev.ai { color:#99f6e4; background:rgba(45,212,191,.14); border-color:rgba(45,212,191,.45); }
     .rev.over { color:#fecaca; background:rgba(248,113,113,.14); border-color:rgba(248,113,113,.5); }
+    .rev.new { color:#bfdbfe; background:rgba(59,130,246,.20); border-color:rgba(96,165,250,.7); }
     .rev-note { color:var(--amber); }
     .rev-note.over { color:#f87171; }
     .portal-link { font-size:.66rem; font-weight:600; color:#6ee7b7; text-decoration:none;
@@ -356,7 +357,7 @@ PAGE = """
         <div class="row {{ 'revised' if r.revised else '' }}">
           <span class="dot {{ r.risk }}"></span>
           <div>
-            <div class="r-name">{{ r.name }}{% if r.ai %} <span class="rev ai">✦ AI</span>{% elif r.revised %} <span class="rev">⇄</span>{% endif %}{% if r.manager_override %} <span class="rev over">⚑ Manager override</span>{% endif %}</div>
+            <div class="r-name">{{ r.name }}{% if r.new %} <span class="rev new">🆕 NEW</span>{% endif %}{% if r.ai %} <span class="rev ai">✦ AI</span>{% elif r.revised %} <span class="rev">⇄</span>{% endif %}{% if r.manager_override %} <span class="rev over">⚑ Manager override</span>{% endif %}</div>
             <div class="r-meta">{{ r.meta }}{% if r.revised %} · <span class="rev-note">{{ r.revised_note }}</span>{% endif %}{% if r.manager_override %} · <span class="rev-note over">{{ r.override_reason }}</span>{% endif %}</div>
           </div>
           <div class="r-save">
@@ -590,7 +591,7 @@ SECTION_ROWS_TPL = """{% for r in rows %}
 <div class="row {{ 'revised' if r.revised else '' }}">
   <span class="dot {{ r.risk }}"></span>
   <div>
-    <div class="r-name">{{ r.name }}{% if r.ai %} <span class="rev ai">✦ AI</span>{% elif r.revised %} <span class="rev">⇄</span>{% endif %}{% if r.manager_override %} <span class="rev over">⚑ Manager override</span>{% endif %}</div>
+    <div class="r-name">{{ r.name }}{% if r.new %} <span class="rev new">🆕 NEW</span>{% endif %}{% if r.ai %} <span class="rev ai">✦ AI</span>{% elif r.revised %} <span class="rev">⇄</span>{% endif %}{% if r.manager_override %} <span class="rev over">⚑ Manager override</span>{% endif %}</div>
     <div class="r-meta">{{ r.meta }}{% if r.revised %} · <span class="rev-note">{{ r.revised_note }}</span>{% endif %}{% if r.manager_override %} · <span class="rev-note over">{{ r.override_reason }}</span>{% endif %}</div>
   </div>
   <div class="r-save">
@@ -650,6 +651,17 @@ def _build_state(scenario, spike=0.0, as_of=None, window="24h"):
     # Live demo feed: append any data dumped into demo_inject.json so newly-added
     # jobs/purchases/vehicles/trips flow straight through the agent pipeline.
     injected = load_injected(now=now)
+    # Names of freshly-injected items, so the dashboard can badge them as NEW and the
+    # audience can instantly spot data the agents have just picked up (all 4 domains).
+    injected_names = {
+        o.name
+        for o in (
+            injected["jobs"]
+            + injected["trips"]
+            + injected["vehicles"]
+            + injected["purchases"]
+        )
+    }
     # Unified request portal: decided requests (all domains) flow onto the dashboard.
     mgr = requests_store.dashboard_feed()
     bb = _DASHBOARD.run(
@@ -682,6 +694,7 @@ def _build_state(scenario, spike=0.0, as_of=None, window="24h"):
             "revised_note": f"+{bb.applied_safety_buffer_hours * 60:.0f}-min safety buffer",
             "manager_override": d.job.name in mgr.override_reasons,
             "override_reason": mgr.override_reasons.get(d.job.name, ""),
+            "new": d.job.name in injected_names,
         }
         for d in plan.decisions
     ]
@@ -700,6 +713,7 @@ def _build_state(scenario, spike=0.0, as_of=None, window="24h"):
             "override_reason": mgr.override_reasons.get(t.trip.name, ""),
             "revised": t.trip.name in bb.keep_physical_trips,
             "revised_note": "kept in person per travel policy",
+            "new": t.trip.name in injected_names,
         }
         for t in travel.decisions
     ]
@@ -718,6 +732,7 @@ def _build_state(scenario, spike=0.0, as_of=None, window="24h"):
                 "ai": getattr(m, "ai_proposed", False),
                 "manager_override": m.name in mgr.override_reasons,
                 "override_reason": mgr.override_reasons.get(m.name, ""),
+                "new": m.name in injected_names,
             }
             for m in (mplan.decisions if mplan else [])
         ]
