@@ -389,7 +389,7 @@ PAGE = """
         {% endfor %}
       </div>
       <ul class="tx" id="txList">
-        {% for m in transcript %}
+        {% for m in transcript|reverse %}
         <li class="{{ 'nego' if 'revis' in m.intent else '' }}">
           <span class="hop">{{ m.sender }} → {{ m.recipient }}</span>
           <span class="intent">[{{ m.intent }}]</span><br>{{ m.summary }}
@@ -551,7 +551,7 @@ PAGE = """
             if (sub) sub.textContent = s.count + " item" + (s.count === 1 ? "" : "s") + " · " + s.cadence;
           });
           const tx = $("txList");
-          if (tx && d.transcript_html != null) tx.innerHTML = d.transcript_html;
+          if (tx && d.transcript_html != null) { tx.innerHTML = d.transcript_html; tx.scrollTop = 0; }
           const verdict = $("verdict");
           if (verdict) {
             verdict.textContent = d.risk_verdict;
@@ -604,7 +604,7 @@ SECTION_ROWS_TPL = """{% for r in rows %}
 </div>
 {% endfor %}"""
 
-TRANSCRIPT_TPL = """{% for m in transcript %}
+TRANSCRIPT_TPL = """{% for m in transcript|reverse %}
 <li class="{{ 'nego' if 'revis' in m.intent else '' }}">
   <span class="hop">{{ m.sender }} → {{ m.recipient }}</span>
   <span class="intent">[{{ m.intent }}]</span><br>{{ m.summary }}
