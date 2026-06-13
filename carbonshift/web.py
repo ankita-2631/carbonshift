@@ -268,16 +268,18 @@ PAGE = """
                background:linear-gradient(180deg, var(--panel2), var(--panel));
                border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
                display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-    .sum-grid { flex:1 1 auto; overflow:auto; display:grid; gap:10px; padding:9px 12px;
+    .sum-grid { flex:1 1 auto; overflow:hidden; display:grid; gap:10px; padding:9px 12px;
                 grid-template-columns: repeat(4, 1fr); min-height:0; }
     .sum-grid::-webkit-scrollbar{width:6px} .sum-grid::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
     .sum-col { background:var(--panel); border:1px solid var(--line); border-radius:11px;
-               padding:9px 11px; display:flex; flex-direction:column; min-height:0; }
-    .sum-h { font-weight:700; font-size:.76rem; display:flex; align-items:center; gap:6px; }
+               padding:9px 11px; display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+    .sum-h { font-weight:700; font-size:.76rem; display:flex; align-items:center; gap:6px; flex:0 0 auto; }
     .sum-h .sum-ico { font-size:.92rem; }
     .sum-tot { margin-left:auto; font-size:.6rem; font-weight:700; color:var(--green); white-space:nowrap; }
-    .sum-intro { font-size:.64rem; color:var(--mut); margin:5px 0 7px; line-height:1.45; }
-    .sum-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+    .sum-intro { font-size:.64rem; color:var(--mut); margin:5px 0 7px; line-height:1.45; flex:0 0 auto; }
+    .sum-list { list-style:none; margin:0; padding:0 4px 0 0; display:flex; flex-direction:column; gap:6px;
+                flex:1 1 auto; overflow-y:auto; min-height:0; }
+    .sum-list::-webkit-scrollbar{width:6px} .sum-list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
     .sum-list li { font-size:.66rem; line-height:1.42; color:var(--txt);
                    padding-left:14px; position:relative; }
     .sum-list li::before { content:"•"; position:absolute; left:1px; color:var(--mut2); }
