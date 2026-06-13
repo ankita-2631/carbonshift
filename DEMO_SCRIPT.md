@@ -97,12 +97,23 @@ reasoning text on travel/procurement rows.
 
 > "Now let's give the agents data they've never seen — live, no restart. One domain at a time."
 
+**First, set a grid-stress event so the optimisation is visible** *(say the line below while
+you run it — without this, if the grid is already at its cleanest, compute correctly shows
+~0 saving because shifting would only make it dirtier):*
+```powershell
+python demo_inject.py spike
+```
+> "First I'll simulate a grid-stress event — low wind at peak demand — so near-term power
+> turns dirty. Watch the grid pill flag the simulated spike."
+
 **Run:**
 ```powershell
 python demo_inject.py compute
 ```
-> "A new GPU job. The OptimizerAgent slots it into the greenest grid window before its
-> deadline — and the RiskAgent guarantees the deadline is still met."
+> "Now a new GPU job lands. With power dirty right now, the OptimizerAgent shifts it into
+> the cleanest overnight window before its deadline — you can see the carbon drop and the
+> saving appear. The always-on API stays put because its deadline is too tight: the agents
+> never move anything past its deadline just to save carbon."
 
 **Run:**
 ```powershell
@@ -133,18 +144,18 @@ python demo_inject.py procurement
 **Do:** After each command, point to the new row appearing in the matching card
 (✦ AI markers on travel & procurement).
 
-### Scene 4 — Grid stress test (~20s)
-**Run:**
-```powershell
-python demo_inject.py spike
-```
-> "Now simulate a grid-stress event — carbon intensity jumps. The agents re-plan around
-> it automatically, and the grid pill flags the simulated spike."
+### Scene 4 — Deadline-safety & clearing the spike (~20s)
+**Do:** Point at the **always-on API** row (still 0 kg, runs now) and the **red/amber**
+risk dots while the spike is active.
+> "Even under grid stress, nothing is moved past its deadline — the always-on service keeps
+> running now, and the RiskAgent flags anything tight. The spike just made the savings
+> opportunity bigger; the safety rules never bend."
 
-**Run (clear it):**
+**Run (clear it — return to the live grid):**
 ```powershell
 python demo_inject.py spike off
 ```
+> "Clear the simulated event and the dashboard snaps back to the live grid."
 
 ### Scene 5 — Human-in-the-loop request portal (~25s)
 **Do:** Click **➕ Request portal** (top right) → open a domain form → submit one request →

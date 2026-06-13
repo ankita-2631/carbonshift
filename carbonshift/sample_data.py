@@ -34,6 +34,22 @@ def demo_jobs(now: datetime | None = None) -> list[Job]:
             flexible=True,
         ),
         Job(
+            name="Genomics batch analysis",
+            power_kw=90.0,
+            duration_hours=3.0,
+            deadline=now + timedelta(hours=16),
+            earliest_start=now,
+            flexible=True,
+        ),
+        Job(
+            name="Video render farm (marketing)",
+            power_kw=150.0,
+            duration_hours=5.0,
+            deadline=now + timedelta(hours=20),
+            earliest_start=now,
+            flexible=True,
+        ),
+        Job(
             name="Customer-facing API (always on)",
             power_kw=15.0,
             duration_hours=1.0,
