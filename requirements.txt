@@ -1,0 +1,7 @@
+azure-ai-projects>=2.2.0
+azure-identity>=1.17.0
+azure-search-documents>=11.5.0
+openai>=1.40.0
+requests>=2.32.0
+python-dotenv>=1.0.1
+flask>=3.0.0
