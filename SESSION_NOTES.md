@@ -55,9 +55,10 @@ charger data.
 Orchestrator ➜ ForecastAgent → OptimizerAgent → TravelAgent →
 FleetAgent → ProcurementAgent → **RiskAgent** (reviewer) → CostAgent → BriefingAgent (LLM)
 
-_FacilitiesAgent was removed from the demo to keep it focused (the `facilities.py` /
-`facilities_agent.py` modules still exist but are no longer wired into the dashboard
-or the Orchestrator default team)._
+_The Facilities domain was fully removed (the `facilities.py` / `facilities_agent.py`
+modules, the `Facility` model, `demo_facilities()`, and all blackboard/cost/risk/briefing
+references are gone). The demo now focuses on four domains: compute, travel, fleet, and
+procurement._
 
 - `orchestrator.py` — coordinator; splits team into proposers/reviewer/finalisers,
   runs the review/revise loop, dispatches `revise()` requests.

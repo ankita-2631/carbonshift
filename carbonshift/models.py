@@ -192,7 +192,7 @@ class TravelPlan:
 
 
 # --------------------------------------------------------------------------- #
-# Generic reduction measures (Facilities, Fleet, Procurement)                 #
+# Generic reduction measures (Fleet, Procurement)                             #
 # --------------------------------------------------------------------------- #
 
 
@@ -201,7 +201,7 @@ class MeasureDecision:
     """A single recommended reduction measure in any non-scheduling domain."""
 
     name: str
-    domain: str            # "facilities" | "fleet" | "procurement"
+    domain: str            # "fleet" | "procurement"
     action: str            # what to do, e.g. "Switch van to EV"
     kg_co2_baseline: float
     kg_co2_chosen: float
@@ -252,30 +252,6 @@ class MeasurePlan:
     @property
     def total_money_saved(self) -> float:
         return sum(d.money_saved for d in self.decisions)
-
-
-# --------------------------------------------------------------------------- #
-# Facilities domain (Scope 1 + 2): buildings, HVAC, lighting, server rooms    #
-# --------------------------------------------------------------------------- #
-
-
-@dataclass
-class Facility:
-    """An on-site energy load that can be reduced by an efficiency measure.
-
-    Attributes:
-        name: Human-readable asset/site name.
-        daily_kwh: Electricity drawn per day, in kWh.
-        reducible_pct: Fraction (0..1) of that energy the measure can avoid.
-        measure: The efficiency measure (e.g. "Smart HVAC setpoint + scheduling").
-        gas: If True, energy is on-site gas (Scope 1) rather than grid electricity.
-    """
-
-    name: str
-    daily_kwh: float
-    reducible_pct: float
-    measure: str = "Efficiency measure"
-    gas: bool = False
 
 
 # --------------------------------------------------------------------------- #

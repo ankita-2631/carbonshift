@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from .agents import Orchestrator
 from .jobs_source import get_jobs
 from .pricing import CURRENCY_SYMBOL
-from .sample_data import demo_facilities, demo_purchases, demo_vehicles
+from .sample_data import demo_purchases, demo_vehicles
 from .travel_booking import get_trips
 
 
@@ -30,7 +30,6 @@ def run_demo(use_agent: bool = True) -> int:
         now=now,
         trip_source=trip_src.source,
         job_source=job_src.source,
-        facilities=demo_facilities(),
         vehicles=demo_vehicles(),
         purchases=demo_purchases(),
     )
@@ -70,7 +69,6 @@ def run_demo(use_agent: bool = True) -> int:
         )
 
     for title, mplan in (
-        ("Facilities (per day)", bb.facility_plan),
         ("Fleet (per year)", bb.fleet_plan),
         ("Procurement (per year)", bb.procurement_plan),
     ):
@@ -89,7 +87,7 @@ def run_demo(use_agent: bool = True) -> int:
         f"ESTIMATED ANNUAL IMPACT: {bb.total_kg_saved / 1000.0:.1f} tonnes CO2 avoided · "
         f"{CURRENCY_SYMBOL}{bb.total_money_saved:,.0f} saved"
     )
-    print("(compute & facilities annualised daily; travel monthly; fleet & procurement already annual)")
+    print("(compute annualised daily; travel monthly; fleet & procurement already annual)")
     print(f"RiskAgent: {bb.risk_verdict}")
     print("=" * 72)
 

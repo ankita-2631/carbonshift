@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from .models import Facility, FuelType, Job, PurchaseLine, Trip, TravelMode, Vehicle
+from .models import FuelType, Job, PurchaseLine, Trip, TravelMode, Vehicle
 
 
 def demo_jobs(now: datetime | None = None) -> list[Job]:
@@ -113,20 +113,6 @@ def demo_trips() -> list[Trip]:
             essential=False,
             relationship_critical=True,
         ),
-    ]
-
-
-def demo_facilities() -> list[Facility]:
-    """On-site energy loads the FacilitiesAgent can reduce (Scope 1 + 2)."""
-    return [
-        Facility(name="HQ HVAC", daily_kwh=900.0, reducible_pct=0.22,
-                 measure="Smart HVAC setpoint + scheduling"),
-        Facility(name="Office lighting", daily_kwh=260.0, reducible_pct=0.45,
-                 measure="LED retrofit + daylight/occupancy sensors"),
-        Facility(name="Server room cooling", daily_kwh=540.0, reducible_pct=0.18,
-                 measure="Raise cold-aisle setpoint + airflow containment"),
-        Facility(name="Warehouse gas heating", daily_kwh=1200.0, reducible_pct=0.15,
-                 measure="Destratification fans + zoning", gas=True),
     ]
 
 

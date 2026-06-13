@@ -1,7 +1,7 @@
 """CostAgent — rolls up CO2 and money saved across every domain.
 
-Different domains save on different cadences (compute jobs run nightly, facilities save
-daily, fleet and procurement savings are annual). To produce one honest, comparable
+Different domains save on different cadences (compute jobs run nightly, travel repeats
+~monthly, fleet and procurement savings are annual). To produce one honest, comparable
 headline, this agent annualises each domain using explicit, transparent assumptions and
 reports an *estimated annual* impact. The native per-cycle figures remain visible in the
 detail sections.
@@ -13,13 +13,12 @@ from .base import Agent, AgentMessage, Blackboard
 
 # Annualisation assumptions (made explicit so the headline is auditable).
 COMPUTE_RUNS_PER_YEAR = 365      # batch/charging jobs assumed to recur nightly
-FACILITIES_DAYS_PER_YEAR = 365   # facility savings recur every day
 TRAVEL_CYCLES_PER_YEAR = 12      # the planned trip set assumed to repeat ~monthly
 # Fleet and procurement plans are already expressed as annual figures (factor = 1).
 
 
 class CostAgent(Agent):
-    """Annualises and aggregates carbon and cost savings across all five domains."""
+    """Annualises and aggregates carbon and cost savings across all four domains."""
 
     name = "CostAgent"
 
@@ -33,9 +32,6 @@ class CostAgent(Agent):
         if bb.travel_plan is not None:
             annual_kg += bb.travel_plan.total_saved_kg * TRAVEL_CYCLES_PER_YEAR
             annual_money += bb.travel_plan.total_money_saved * TRAVEL_CYCLES_PER_YEAR
-        if bb.facility_plan is not None:
-            annual_kg += bb.facility_plan.total_saved_kg * FACILITIES_DAYS_PER_YEAR
-            annual_money += bb.facility_plan.total_money_saved * FACILITIES_DAYS_PER_YEAR
         if bb.fleet_plan is not None:
             annual_kg += bb.fleet_plan.total_saved_kg
             annual_money += bb.fleet_plan.total_money_saved
@@ -62,7 +58,6 @@ class CostAgent(Agent):
                 "currency": CURRENCY_SYMBOL,
                 "assumptions": {
                     "compute_runs_per_year": COMPUTE_RUNS_PER_YEAR,
-                    "facilities_days_per_year": FACILITIES_DAYS_PER_YEAR,
                     "travel_cycles_per_year": TRAVEL_CYCLES_PER_YEAR,
                 },
             },

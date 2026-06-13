@@ -16,7 +16,6 @@ from datetime import datetime, timezone
 
 from ..carbon_data import CarbonForecast
 from ..models import (
-    Facility,
     Job,
     MeasurePlan,
     PurchaseLine,
@@ -60,7 +59,6 @@ class Blackboard:
     job_source: str = ""    # where the jobs came from (org scheduler or demo)
     trips: list[Trip] = field(default_factory=list)
     trip_source: str = ""   # where the trips came from (org travel app or demo)
-    facilities: list[Facility] = field(default_factory=list)
     vehicles: list[Vehicle] = field(default_factory=list)
     purchases: list[PurchaseLine] = field(default_factory=list)
 
@@ -78,8 +76,7 @@ class Blackboard:
     # Produced by TravelAgent.
     travel_plan: TravelPlan | None = None
 
-    # Produced by FacilitiesAgent / FleetAgent / ProcurementAgent.
-    facility_plan: MeasurePlan | None = None
+    # Produced by FleetAgent / ProcurementAgent.
     fleet_plan: MeasurePlan | None = None
     procurement_plan: MeasurePlan | None = None
 

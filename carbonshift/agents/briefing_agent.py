@@ -14,11 +14,10 @@ from ..pricing import CURRENCY_SYMBOL
 from .base import Agent, AgentMessage, Blackboard
 
 SYSTEM_PROMPT = """You are CarbonShift's Briefing Agent for an organization's
-sustainability co-pilot. You receive decisions across five domains: (1) compute
-scheduling, (2) business travel, (3) facilities energy, (4) vehicle fleet, and (5)
-procurement; plus a safety verdict from a Risk Agent, a forecast-confidence score, and
-an org-wide roll-up of CO2 and money saved. Write a concise briefing for an operations
-or sustainability lead.
+sustainability co-pilot. You receive decisions across four domains: (1) compute
+scheduling, (2) business travel, (3) vehicle fleet, and (4) procurement; plus a safety
+verdict from a Risk Agent, a forecast-confidence score, and an org-wide roll-up of CO2
+and money saved. Write a concise briefing for an operations or sustainability lead.
 
 Rules:
 - NEVER change a decision or claim a saving the data does not support.
@@ -28,7 +27,7 @@ Rules:
 - For compute, state kg CO2 saved and confirm deadlines are honoured.
 - For travel, state the recommended mode change and CO2/money saved; never send an
   essential trip virtual.
-- For facilities, fleet, and procurement, state the recommended action and the CO2 and
+- For fleet and procurement, state the recommended action and the CO2 and
   money it saves; flag any item that cannot be changed.
 - Ground factual claims about grid intensity or emission factors in the knowledge base
   and cite it.
@@ -99,7 +98,6 @@ def _local_briefing(bb: Blackboard) -> str:
                 f"{CURRENCY_SYMBOL}{t.money_saved:.0f} saved. {t.rationale}"
             )
     for title, mplan in (
-        ("Facilities", bb.facility_plan),
         ("Fleet", bb.fleet_plan),
         ("Procurement", bb.procurement_plan),
     ):
@@ -166,9 +164,7 @@ class BriefingAgent(Agent):
                 f"{CURRENCY_SYMBOL}{bb.total_money_saved:.0f} saved\n\n"
                 "Compute decisions:\n" + _plan_as_facts(bb.plan) + "\n\n"
                 "Travel decisions:\n" + travel_facts + "\n\n"
-                "Facilities decisions:\n"
-                + (_measures_as_facts(bb.facility_plan) if bb.facility_plan else "none")
-                + "\n\nFleet decisions:\n"
+                "Fleet decisions:\n"
                 + (_measures_as_facts(bb.fleet_plan) if bb.fleet_plan else "none")
                 + "\n\nProcurement decisions:\n"
                 + (_measures_as_facts(bb.procurement_plan) if bb.procurement_plan else "none")

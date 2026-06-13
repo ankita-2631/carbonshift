@@ -7,7 +7,6 @@ A team of specialised agents collaborates over a shared blackboard:
 from .base import Agent, AgentMessage, Blackboard, RevisionRequest
 from .briefing_agent import BriefingAgent
 from .cost_agent import CostAgent
-from .facilities_agent import FacilitiesAgent
 from .fleet_agent import FleetAgent
 from .forecast_agent import ForecastAgent
 from .optimizer_agent import OptimizerAgent
@@ -25,7 +24,6 @@ __all__ = [
     "ForecastAgent",
     "OptimizerAgent",
     "TravelAgent",
-    "FacilitiesAgent",
     "FleetAgent",
     "ProcurementAgent",
     "RiskAgent",

@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from ..models import Facility, Job, PurchaseLine, Trip, Vehicle
+from ..models import Job, PurchaseLine, Trip, Vehicle
 from .base import Agent, Blackboard
 from .briefing_agent import BriefingAgent
 from .cost_agent import CostAgent
@@ -54,7 +54,6 @@ class Orchestrator:
         now: datetime | None = None,
         trip_source: str = "",
         job_source: str = "",
-        facilities: list[Facility] | None = None,
         vehicles: list[Vehicle] | None = None,
         purchases: list[PurchaseLine] | None = None,
         grid_spike: float = 0.0,
@@ -65,7 +64,6 @@ class Orchestrator:
             job_source=job_source,
             trips=trips or [],
             trip_source=trip_source,
-            facilities=facilities or [],
             vehicles=vehicles or [],
             purchases=purchases or [],
             grid_spike=grid_spike,

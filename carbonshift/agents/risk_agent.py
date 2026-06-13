@@ -94,8 +94,8 @@ class RiskAgent(Agent):
                 ):
                     keep_physical.append(t.trip.name)
 
-        # Validate the measure-based domains (facilities, fleet, procurement).
-        for measure_plan in (bb.facility_plan, bb.fleet_plan, bb.procurement_plan):
+        # Validate the measure-based domains (fleet, procurement).
+        for measure_plan in (bb.fleet_plan, bb.procurement_plan):
             if measure_plan is None:
                 continue
             for m in measure_plan.decisions:
