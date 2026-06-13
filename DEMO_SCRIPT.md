@@ -32,6 +32,10 @@ team transcript, and the plain-English summary are all visible. Leave it on scre
 **Layout:** browser (dashboard) on the left, terminal on the right, so the audience sees
 you run a command and the dashboard update.
 
+**Also pre-open** a second browser tab on the Azure portal at the Foundry AI Search index
+(`carbonshift-search-8865` → Indexes → `carbon-knowledge`) and sign in beforehand, so
+Scene 2.5 has no loading or login on camera.
+
 ---
 
 ## B. How to record (no extra software)
@@ -61,7 +65,30 @@ you run a command and the dashboard update.
 > re-checks every decision and can send the plan back for revision. Everything's grounded
 > in Foundry IQ — the required Microsoft IQ layer — so each figure is cited."
 
-**Do:** Scroll through the **Agent team** transcript.
+**Do:** Scroll through the **Agent team** transcript. Point out the two lines that *prove*
+the IQ layer is live: TravelAgent's *"Classified in-person need … via Foundry IQ"* and
+ProcurementAgent's *"…selected greener options … via Foundry IQ"*, plus the **✦ AI**
+reasoning text on travel/procurement rows.
+
+### Scene 2.5 — Proof it runs on Microsoft Foundry (~25s) · switch to browser tab
+
+> "And this isn't a mock. The reasoning agents call a **gpt-4o** deployment in our
+> Microsoft Foundry project, and every fact is grounded in **Foundry IQ** — the required
+> Microsoft IQ layer — backed by an Azure AI Search index called `carbon-knowledge`."
+
+**Do (in this order, in the Azure tab):**
+1. Show the **Azure AI Search** resource `carbonshift-search-8865` → **Indexes** →
+   open **`carbon-knowledge`** — point at **Documents: 10** (the index is populated).
+2. In the **Search explorer**, type `*` and click **Search** so the real knowledge
+   documents (emission factors, grid intensity, scheduling policy) list out.
+3. *(Optional, ~3s)* Flash `agent.yaml` and `knowledge/` in VS Code so they see the
+   gpt-4o model + the cited source docs wired in.
+
+> ⚠️ **On camera:** scroll past any panel that shows your full subscription GUID or
+> account email — keep identifiers off a public video.
+> ℹ️ The Foundry portal's **Knowledge → Indexes** page may read *"No indexes available"* —
+> that's only the project-level registration view; the app reads the Search index
+> directly, so show the **`carbonshift-search-8865`** tab (above), not that page.
 
 ### Scene 3 — Live data injection, one agent at a time (~80s)
 
