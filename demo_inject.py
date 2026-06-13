@@ -109,6 +109,20 @@ DOMAIN_ITEMS: dict[str, list[dict]] = {
          "duration_hours": 2.0, "due_in_hours": 10.0, "flexible": True},
         {"name": "Quarterly risk-model backtest", "power_kw": 80.0,
          "duration_hours": 3.0, "due_in_hours": 18.0, "flexible": True},
+        {"name": "Genomics sequencing batch", "power_kw": 95.0,
+         "duration_hours": 3.0, "due_in_hours": 16.0, "flexible": True},
+        {"name": "Video transcoding pipeline", "power_kw": 140.0,
+         "duration_hours": 5.0, "due_in_hours": 20.0, "flexible": True},
+        {"name": "Fraud-detection model retrain", "power_kw": 110.0,
+         "duration_hours": 4.0, "due_in_hours": 12.0, "flexible": True},
+        {"name": "Recommendation engine reindex", "power_kw": 70.0,
+         "duration_hours": 2.0, "due_in_hours": 9.0, "flexible": True},
+        {"name": "Climate simulation ensemble", "power_kw": 210.0,
+         "duration_hours": 6.0, "due_in_hours": 22.0, "flexible": True},
+        {"name": "Log analytics aggregation", "power_kw": 40.0,
+         "duration_hours": 2.0, "due_in_hours": 8.0, "flexible": True},
+        {"name": "Disaster-recovery backup sync", "power_kw": 55.0,
+         "duration_hours": 3.0, "due_in_hours": 11.0, "flexible": True},
     ],
     # Business trips -> TravelAgent (LLM classifier decides the in-person need live).
     "trips": [
@@ -120,6 +134,20 @@ DOMAIN_ITEMS: dict[str, list[dict]] = {
          "mode": "car_petrol"},
         # Should classify FLEXIBLE -> can go virtual.
         {"name": "Monthly internal budget review", "distance_km": 180.0,
+         "mode": "car_petrol"},
+        {"name": "New-supplier site audit, Birmingham", "distance_km": 200.0,
+         "mode": "car_petrol"},
+        {"name": "Client contract signing, Bristol", "distance_km": 190.0,
+         "mode": "car_petrol"},
+        {"name": "Regional sales kickoff, Leeds", "distance_km": 300.0,
+         "mode": "car_petrol"},
+        {"name": "Trade conference keynote, Glasgow", "distance_km": 600.0,
+         "mode": "car_petrol"},
+        {"name": "Partner quarterly review, Cardiff", "distance_km": 250.0,
+         "mode": "car_petrol"},
+        {"name": "Graduate recruitment fair, Nottingham", "distance_km": 220.0,
+         "mode": "car_petrol"},
+        {"name": "Data-centre commissioning, Slough", "distance_km": 160.0,
          "mode": "car_petrol"},
     ],
     # Vehicles -> FleetAgent routes each against EV range + live charging availability.
@@ -136,6 +164,34 @@ DOMAIN_ITEMS: dict[str, list[dict]] = {
         {"name": "Leeds sales pool car", "daily_km": 90.0, "fuel": "petrol",
          "ev_range_km": 300.0, "depot_charging": True,
          "route_lat": 53.8008, "route_lon": -1.5491},
+        # Dense-city parcel route, plenty of chargers -> electrify (GREEN).
+        {"name": "Manchester parcel van", "daily_km": 100.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 53.4808, "route_lon": -2.2426},
+        # Remote run, few chargers -> charger-map dependent verdict.
+        {"name": "Cornwall coastal run", "daily_km": 360.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 50.2660, "route_lon": -5.0527},
+        # Short engineer hops -> electrify (GREEN).
+        {"name": "Cardiff service engineer car", "daily_km": 95.0, "fuel": "petrol",
+         "ev_range_km": 300.0, "depot_charging": True,
+         "route_lat": 51.4816, "route_lon": -3.1791},
+        # Remote Highlands route, no chargers -> likely keep until infra improves.
+        {"name": "Highlands remote service van", "daily_km": 410.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 57.4778, "route_lon": -4.2247},
+        # City multidrop, good charger density -> electrify (GREEN).
+        {"name": "Birmingham multidrop van", "daily_km": 130.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 52.4862, "route_lon": -1.8904},
+        # Edinburgh courier loop, in range -> electrify (GREEN).
+        {"name": "Edinburgh courier route", "daily_km": 120.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 55.9533, "route_lon": -3.1883},
+        # Newcastle regional courier, longer haul -> charger-map dependent.
+        {"name": "Newcastle regional courier", "daily_km": 300.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 54.9783, "route_lon": -1.6178},
     ],
     # Purchases -> ProcurementAgent (reasons about unknown items autonomously via IQ).
     "purchases": [
@@ -143,6 +199,13 @@ DOMAIN_ITEMS: dict[str, list[dict]] = {
         {"name": "Trade-show booth & exhibition stand", "kg_co2e": 5200.0, "cost": 16000.0},
         {"name": "Server hardware refresh (data centre)", "kg_co2e": 18000.0, "cost": 120000.0},
         {"name": "Branded staff uniforms", "kg_co2e": 3100.0, "cost": 9000.0},
+        {"name": "Office furniture restocking", "kg_co2e": 4200.0, "cost": 18000.0},
+        {"name": "Marketing print campaign", "kg_co2e": 2800.0, "cost": 11000.0},
+        {"name": "Corporate event catering", "kg_co2e": 3600.0, "cost": 14000.0},
+        {"name": "Promotional giveaway items", "kg_co2e": 1900.0, "cost": 6000.0},
+        {"name": "Fleet tyre replacement contract", "kg_co2e": 5400.0, "cost": 21000.0},
+        {"name": "Data-centre cooling upgrade", "kg_co2e": 12000.0, "cost": 75000.0},
+        {"name": "Annual stationery supply", "kg_co2e": 1500.0, "cost": 4500.0},
     ],
 }
 
