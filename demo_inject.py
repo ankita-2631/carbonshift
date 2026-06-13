@@ -10,16 +10,24 @@ slots them into the greenest grid window before their deadline) — all live, no
 Usage (from anywhere):
     python C:\\Hack\\carbonshift\\demo_inject.py            # dump the next wave of data
     python C:\\Hack\\carbonshift\\demo_inject.py wave 2     # dump a specific wave
+
+    # Per-domain dumps — push ONE domain at a time so you can narrate each agent live:
+    python C:\\Hack\\carbonshift\\demo_inject.py compute     # new compute job   -> OptimizerAgent
+    python C:\\Hack\\carbonshift\\demo_inject.py travel      # new business trip -> TravelAgent
+    python C:\\Hack\\carbonshift\\demo_inject.py fleet       # new vehicle       -> FleetAgent
+    python C:\\Hack\\carbonshift\\demo_inject.py procurement # new purchase      -> ProcurementAgent
+
     python C:\\Hack\\carbonshift\\demo_inject.py spike      # simulate a grid-stress event (180 gCO2/kWh)
     python C:\\Hack\\carbonshift\\demo_inject.py spike 220  # simulate a spike of a specific magnitude
     python C:\\Hack\\carbonshift\\demo_inject.py spike off  # clear the simulated spike
     python C:\\Hack\\carbonshift\\demo_inject.py status     # show what is currently injected
     python C:\\Hack\\carbonshift\\demo_inject.py clear      # reset to baseline (remove all injected data)
 
-Each wave is ADDITIVE: it appends to whatever has already been dumped, so you can build
-the picture up live. The grid spike is driven from here (not the dashboard) so the
-production view never exposes a fabricate-data control. `clear` wipes it back to the
-baseline demo dataset.
+Each dump is ADDITIVE: it appends to whatever has already been dumped, so you can build
+the picture up live. The per-domain commands cycle through a small curated list, so you
+can run e.g. `procurement` several times to add successive items. The grid spike is
+driven from here (not the dashboard) so the production view never exposes a
+fabricate-data control. `clear` wipes it back to the baseline demo dataset.
 """
 from __future__ import annotations
 
@@ -90,6 +98,63 @@ WAVES: list[dict] = [
 ]
 
 
+# Per-domain demo items. Each list is cycled through (by how many of that domain are
+# already injected), so running the same domain command repeatedly adds the next item.
+DOMAIN_ITEMS: dict[str, list[dict]] = {
+    # Compute jobs -> OptimizerAgent slots each into the greenest window before deadline.
+    "jobs": [
+        {"name": "Nightly ML model fine-tune", "power_kw": 120.0,
+         "duration_hours": 4.0, "due_in_hours": 14.0, "flexible": True},
+        {"name": "Data-warehouse ETL batch", "power_kw": 60.0,
+         "duration_hours": 2.0, "due_in_hours": 10.0, "flexible": True},
+        {"name": "Quarterly risk-model backtest", "power_kw": 80.0,
+         "duration_hours": 3.0, "due_in_hours": 18.0, "flexible": True},
+    ],
+    # Business trips -> TravelAgent (LLM classifier decides the in-person need live).
+    "trips": [
+        # Descriptive name, flags OFF -> should classify ESSENTIAL (physical inspection).
+        {"name": "Factory equipment inspection, Sheffield", "distance_km": 230.0,
+         "mode": "car_petrol"},
+        # Should classify RELATIONSHIP-CRITICAL -> triggers a RiskAgent negotiation round.
+        {"name": "Investor roadshow, Edinburgh", "distance_km": 540.0,
+         "mode": "car_petrol"},
+        # Should classify FLEXIBLE -> can go virtual.
+        {"name": "Monthly internal budget review", "distance_km": 180.0,
+         "mode": "car_petrol"},
+    ],
+    # Vehicles -> FleetAgent routes each against EV range + live charging availability.
+    "vehicles": [
+        # Short route, fits EV range, depot charging -> electrify (GREEN).
+        {"name": "Bristol delivery van", "daily_km": 110.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 51.4545, "route_lon": -2.5879},
+        # Long route, exceeds range -> relies on live charger-map data.
+        {"name": "Inter-city logistics route", "daily_km": 470.0, "fuel": "diesel",
+         "ev_range_km": 250.0, "depot_charging": True,
+         "route_lat": 53.8008, "route_lon": -1.5491},
+        # Petrol pool car, short commute -> electrify (GREEN).
+        {"name": "Leeds sales pool car", "daily_km": 90.0, "fuel": "petrol",
+         "ev_range_km": 300.0, "depot_charging": True,
+         "route_lat": 53.8008, "route_lon": -1.5491},
+    ],
+    # Purchases -> ProcurementAgent (reasons about unknown items autonomously via IQ).
+    "purchases": [
+        # No alt_reduction_pct => ProcurementAgent reasons autonomously (✦ AI).
+        {"name": "Trade-show booth & exhibition stand", "kg_co2e": 5200.0, "cost": 16000.0},
+        {"name": "Server hardware refresh (data centre)", "kg_co2e": 18000.0, "cost": 120000.0},
+        {"name": "Branded staff uniforms", "kg_co2e": 3100.0, "cost": 9000.0},
+    ],
+}
+
+# Friendly command name -> (data key, agent it exercises) for the per-domain dumps.
+DOMAIN_COMMANDS: dict[str, tuple[str, str]] = {
+    "compute": ("jobs", "OptimizerAgent"),
+    "travel": ("trips", "TravelAgent"),
+    "fleet": ("vehicles", "FleetAgent"),
+    "procurement": ("purchases", "ProcurementAgent"),
+}
+
+
 def _load() -> dict:
     try:
         with open(INJECT_PATH, "r", encoding="utf-8") as fh:
@@ -142,6 +207,20 @@ def next_wave() -> None:
     print("All waves already dumped. Use 'clear' to reset to baseline.")
 
 
+def apply_domain(command: str) -> None:
+    """Dump a single new item for one domain, exercising just that agent."""
+    key, agent = DOMAIN_COMMANDS[command]
+    items = DOMAIN_ITEMS[key]
+    data = _load()
+    idx = len(data[key]) % len(items)   # cycle through the curated list
+    item = items[idx]
+    data[key].append(item)
+    _save(data)
+    print(f"Dumped 1 {command} item: \"{item.get('name')}\" -> {agent}.")
+    print(f"Dashboard now carries: {_counts(data)}.")
+    print("Watch the dashboard — the agents will re-plan within a few seconds.")
+
+
 def clear() -> None:
     try:
         os.remove(INJECT_PATH)
@@ -186,6 +265,8 @@ def main(argv: list[str]) -> None:
         clear()
     elif cmd == "status":
         status()
+    elif cmd in DOMAIN_COMMANDS:
+        apply_domain(cmd)
     elif cmd == "spike":
         if len(argv) > 1 and argv[1].lower() in ("off", "clear", "0"):
             set_spike(0.0)
