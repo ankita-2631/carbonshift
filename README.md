@@ -1,5 +1,7 @@
 # CarbonShift 🌍⚡
 
+> **The AI agent team that negotiates greener operations — without missing a deadline.**
+
 **An organizational sustainability co-pilot: a team of AI agents that retime and
 reroute a company's flexible operations — compute, business travel, fleet, and
 procurement — to cut both carbon and cost.**

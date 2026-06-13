@@ -50,6 +50,9 @@ Scene 2.5 has no loading or login on camera.
 ## C. Run sheet (scene by scene)
 
 ### Scene 1 — Hook & problem (~20s) · on the dashboard
+> *(Open with the tagline.)* "CarbonShift — the AI agent team that negotiates greener
+> operations, without missing a deadline."
+>
 > "This is CarbonShift — an organizational sustainability co-pilot. Electricity is about
 > a quarter of global emissions, and the grid's carbon intensity swings two-to-five times
 > a day. Most flexible work runs at the dirtiest, most expensive times. CarbonShift is a
