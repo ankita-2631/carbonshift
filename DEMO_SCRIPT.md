@@ -149,7 +149,7 @@ python demo_inject.py spike off
 ### Scene 5 — Human-in-the-loop request portal (~25s)
 **Do:** Click **➕ Request portal** (top right) → open a domain form → submit one request →
 show the **Accept** / **Override** buttons on the recommendation screen.
-> "It's not just automatic. Managers submit requests through the portal and get a
+> "It's not just automatic. Users submit requests through the portal and get a
 > Foundry-IQ-grounded recommendation they can accept — which flows onto the board with
 > its AI marker — or override with a reason, flagged in red. Human decisions are always
 > authoritative."

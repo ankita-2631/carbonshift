@@ -62,11 +62,11 @@ and web UI so the reasoning is transparent.
 
 ## Request portal & time window
 
-Beyond the team dashboard, managers submit **compute, travel, fleet, and procurement**
+Beyond the team dashboard, users submit **compute, travel, fleet, and procurement**
 requests at **`/request`**. Each request gets an emailed, Foundry-IQ-grounded
 recommendation with **Accept** / **Override** actions: accepted items flow onto the
 dashboard with a ✦ AI marker and their saving, while overrides are flagged with a red
-⚑ badge and the manager's reason. The dashboard also has a **date/time window selector**
+⚑ badge and the user's reason. The dashboard also has a **date/time window selector**
 (default: last 24 hours, live) that re-anchors the whole evaluation — grid forecast and
 scheduling — to any chosen moment.
 
@@ -116,7 +116,7 @@ The agents communicate by posting `AgentMessage`s on the blackboard, e.g.
 - **Multi-agent** orchestration with a RiskAgent-led negotiation loop (ForecastAgent · OptimizerAgent · TravelAgent · FleetAgent · ProcurementAgent · RiskAgent · CostAgent · BriefingAgent)
 - Python 3.11+
 - UK Carbon Intensity API (no key) for live grid data
-- Flask web UI (agent transcript + before/after schedule + CO₂ & £ saved counters + travel routing + fleet/procurement cards + a manager request portal and a date/time window selector)
+- Flask web UI (agent transcript + before/after schedule + CO₂ & £ saved counters + travel routing + fleet/procurement cards + a user request portal and a date/time window selector)
 
 ## Getting started
 
