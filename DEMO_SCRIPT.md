@@ -161,6 +161,60 @@ the default — then the headline totals.
 
 ---
 
+## C2. Hitting the judging rubric (say these lines, point at these things)
+
+The judges score five things. Each scene above already covers them — these are the exact
+lines/moments to make sure each criterion is *obvious* on camera. Weave them in; don't read
+them as a list.
+
+### 🧠 Reasoning & Multi-step Thinking (20%) — *clear problem-solving approach*
+**When:** during Scene 2 (agent team) and the second `travel` injection in Scene 3.
+> "This isn't one prompt. The problem is decomposed across specialist agents on a shared
+> blackboard: ForecastAgent reads the live grid, OptimizerAgent schedules against it, the
+> domain agents act, and an independent RiskAgent re-checks every decision. When RiskAgent
+> disagrees, it sends the plan *back* for revision — watch the ⇄ negotiation badge — and
+> only a re-validated plan reaches the CostAgent. That's multi-step, self-correcting
+> reasoning, not a single model call."
+
+**Do:** Point at the **⇄ negotiation round** badge and the step-by-step transcript order.
+
+### ✨ Creativity & Originality (15%) — *novel ideas or unexpected execution*
+**When:** Scene 3 (procurement reasoning) and Scene 5 (portal).
+> "Two things here are unusual. First, the agents *negotiate* — RiskAgent can overrule and
+> reopen a decision, so the team converges on a plan rather than rubber-stamping it. Second,
+> the agents reason about items they've never seen: a vague trip name or an unfamiliar
+> purchase is classified live via Foundry IQ, not matched to a hardcoded list. And it spans
+> four domains — compute, travel, fleet and procurement — under one carbon-and-cost goal."
+
+**Do:** Show the **✦ AI** marker on an item the agent classified itself.
+
+### 🎨 User Experience & Presentation (15%) — *clear, polished, demoable*
+**When:** throughout — make the UI do the talking.
+> "Everything updates live — I inject data and the board re-plans in front of you, no
+> restart. One headline number for carbon, one for cost. AI decisions are marked with a
+> sparkle, human overrides flagged in red, and the whole view is anchored to a chosen time
+> window."
+
+**Do:** Keep the layout clean (browser left, terminal right); let each injection visibly
+land in its card; don't talk over dead air — trim slow re-plans in editing.
+
+### 🛡️ Reliability & Safety (20%) — *solid patterns, avoids obvious pitfalls*
+**When:** Scene 5 (override) and Scene 6 (honest totals) — say this explicitly.
+> "We designed for the obvious failure modes. Human flags and overrides are always
+> authoritative and clearly badged. Deadlines are hard constraints — nothing is ever moved
+> past its deadline to save carbon. Every figure is a *cited estimate*, with its Foundry IQ
+> source and assumptions shown — no invented numbers. And if the knowledge layer is
+> unavailable, the system degrades gracefully instead of crashing, so the plan still loads."
+
+**Do:** Trigger one **⚑ override** with a reason (red flag), then point at the **assumptions
+/ estimate** wording on the totals.
+
+> ✅ **Accuracy & Relevance (20%)** is covered by Scene 2.5: you literally show the required
+> **Foundry IQ** layer (`carbon-knowledge` index) backing the cited numbers, and you name the
+> **Reasoning Agents track** in the first 15 seconds.
+
+---
+
 ## D. Command reference (all from `C:\Hack\carbonshift`)
 
 | Purpose | Command |
