@@ -17,6 +17,10 @@ Usage (from anywhere):
     python C:\\Hack\\carbonshift\\demo_inject.py fleet       # new vehicle       -> FleetAgent
     python C:\\Hack\\carbonshift\\demo_inject.py procurement # new purchase      -> ProcurementAgent
 
+    # Add several at once by passing a count (cycles the curated 10-item pool):
+    python C:\\Hack\\carbonshift\\demo_inject.py compute 10   # add 10 compute jobs in one go
+    python C:\\Hack\\carbonshift\\demo_inject.py procurement 5 # add 5 purchases in one go
+
     python C:\\Hack\\carbonshift\\demo_inject.py spike      # simulate a grid-stress event (180 gCO2/kWh)
     python C:\\Hack\\carbonshift\\demo_inject.py spike 220  # simulate a spike of a specific magnitude
     python C:\\Hack\\carbonshift\\demo_inject.py spike off  # clear the simulated spike
@@ -270,16 +274,29 @@ def next_wave() -> None:
     print("All waves already dumped. Use 'clear' to reset to baseline.")
 
 
-def apply_domain(command: str) -> None:
-    """Dump a single new item for one domain, exercising just that agent."""
+def apply_domain(command: str, count: int = 1) -> None:
+    """Dump `count` new item(s) for one domain, exercising just that agent.
+
+    Defaults to a single item (so you can narrate each agent live). Pass a count
+    to dump several at once, e.g. `compute 10` to add ten compute jobs in one go.
+    """
     key, agent = DOMAIN_COMMANDS[command]
     items = DOMAIN_ITEMS[key]
     data = _load()
-    idx = len(data[key]) % len(items)   # cycle through the curated list
-    item = items[idx]
-    data[key].append(item)
+    count = max(1, count)
+    added_names = []
+    for _ in range(count):
+        idx = len(data[key]) % len(items)   # cycle through the curated list
+        item = items[idx]
+        data[key].append(item)
+        added_names.append(item.get("name"))
     _save(data)
-    print(f"Dumped 1 {command} item: \"{item.get('name')}\" -> {agent}.")
+    if len(added_names) == 1:
+        print(f"Dumped 1 {command} item: \"{added_names[0]}\" -> {agent}.")
+    else:
+        print(f"Dumped {len(added_names)} {command} items -> {agent}:")
+        for name in added_names:
+            print(f"  · {name}")
     print(f"Dashboard now carries: {_counts(data)}.")
     print("Watch the dashboard — the agents will re-plan within a few seconds.")
 
@@ -329,7 +346,8 @@ def main(argv: list[str]) -> None:
     elif cmd == "status":
         status()
     elif cmd in DOMAIN_COMMANDS:
-        apply_domain(cmd)
+        count = int(argv[1]) if len(argv) > 1 and argv[1].isdigit() else 1
+        apply_domain(cmd, count)
     elif cmd == "spike":
         if len(argv) > 1 and argv[1].lower() in ("off", "clear", "0"):
             set_spike(0.0)

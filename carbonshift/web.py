@@ -389,7 +389,7 @@ PAGE = """
         {% endfor %}
       </div>
       <ul class="tx" id="txList">
-        {% for m in transcript|reverse %}
+        {% for m in transcript %}
         <li class="{{ 'nego' if 'revis' in m.intent else '' }}">
           <span class="hop">{{ m.sender }} → {{ m.recipient }}</span>
           <span class="intent">[{{ m.intent }}]</span><br>{{ m.summary }}
@@ -604,12 +604,47 @@ SECTION_ROWS_TPL = """{% for r in rows %}
 </div>
 {% endfor %}"""
 
-TRANSCRIPT_TPL = """{% for m in transcript|reverse %}
+TRANSCRIPT_TPL = """{% for m in transcript %}
 <li class="{{ 'nego' if 'revis' in m.intent else '' }}">
   <span class="hop">{{ m.sender }} → {{ m.recipient }}</span>
   <span class="intent">[{{ m.intent }}]</span><br>{{ m.summary }}
 </li>
 {% endfor %}"""
+
+# Agent that owns each injectable domain — used to float the agent that just acted
+# on freshly-dumped data to the top of the transcript.
+_DOMAIN_AGENT = {
+    "jobs": "OptimizerAgent",
+    "trips": "TravelAgent",
+    "vehicles": "FleetAgent",
+    "purchases": "ProcurementAgent",
+}
+
+
+def _order_transcript(transcript, injected):
+    """Order transcript newest-activity-first for the live demo.
+
+    The agent pipeline re-runs in a fixed order every refresh, so a plain reverse
+    always parks the summary agents (Briefing/Cost) on top. Instead, surface the
+    agent that just acted on freshly-injected data first (e.g. OptimizerAgent after
+    `compute` dumps new jobs), then any negotiation/revision exchange, then the rest
+    in reverse pipeline order (most-recent step first).
+    """
+    active = {
+        agent for dom, agent in _DOMAIN_AGENT.items() if injected.get(dom)
+    }
+
+    def group(m):
+        if m.sender in active:
+            return 0          # agent that just acted on freshly-injected data
+        if "revis" in m.intent:
+            return 1          # negotiation / revision exchanges
+        return 2
+
+    indexed = list(enumerate(transcript))
+    # Stable sort by group; within a group keep the most recent pipeline step first.
+    indexed.sort(key=lambda pair: (group(pair[1]), -pair[0]))
+    return [m for _, m in indexed]
 
 
 def _grid_snapshot(forecast, now):
@@ -829,7 +864,7 @@ def _build_state(scenario, spike=0.0, as_of=None, window="24h"):
         "confidence": bb.forecast_confidence,
         "risk_verdict": bb.risk_verdict,
         "risk_ok": bb.risk_ok,
-        "transcript": bb.transcript,
+        "transcript": _order_transcript(bb.transcript, injected),
         "total_kg": bb.total_kg_saved,
         "total_money": bb.total_money_saved,
         "sections": sections,
