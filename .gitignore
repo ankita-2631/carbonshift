@@ -21,3 +21,7 @@ _role.txt
 dist/
 build/
 *.egg-info/
+
+# Local working docs (not part of the product)
+DEMO_SCRIPT.md
+SESSION_NOTES.md
